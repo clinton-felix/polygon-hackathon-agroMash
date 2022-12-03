@@ -135,4 +135,43 @@ describe("Escrow", () => {
       expect(await escrow.approvalStatus(1, lender.address)).to.be.equal(true);
     });
   });
+
+  describe("Sale", async () => {
+    // a beforeEach hook to pre-model a transaction before actual test
+    beforeEach(async () => {
+      // deposit initial eligibility entry fee of 5 eth
+      let transaction = await escrow
+        .connect(buyer)
+        .depositEarnest(1, { value: tokens(5) });
+      await transaction.wait();
+
+      // update the reviewStatus
+      transaction = await escrow.connect(inspector).updateReviewStatus(1, true);
+      await transaction.wait();
+      // buyer approves sale
+      transaction = await escrow.connect(buyer).approveSale(1);
+      await transaction.wait();
+      // seller approves
+      transaction = await escrow.connect(seller).approveSale(1);
+      await transaction.wait();
+      // lender approves
+      transaction = await escrow.connect(lender).approveSale(1);
+      await transaction.wait();
+
+      // Send money to the smartcontract to complete and fund the deal
+      await lender.sendTransaction({ to: escrow.address, value: tokens(5) });
+
+      // finalizing the sale
+      transaction = await escrow.connect(seller).finalizeSale(1);
+      await transaction.wait();
+    });
+
+    it("updates ownership", async () => {
+      expect(await agroMash.ownerOf(1)).to.be.equal(buyer.address);
+    });
+
+    it("Updates balances", async () => {
+      expect(await escrow.getBalance()).to.be.equal(0);
+    });
+  });
 });

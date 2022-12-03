@@ -1,33 +1,33 @@
 {
-    "name": "Luxury NYC Penthouse",
-    "address": "157 W 57th St APT 49B, New York, NY 10019",
-    "description": "Luxury Penthouse located in the heart of NYC",
-    "image": "https://ipfs.io/ipfs/QmQUozrHLAusXDxrvsESJ3PYB3rUeUuBAvVWw6nop2uu7c/1.png",
-    "id": "1",
-    "attributes": [
-        {
-            "trait_type": "Purchase Price",
-            "value": 20
-        },
-        {
-            "trait_type": "Type of Residence",
-            "value": "Condo"
-        },
-        {
-            "trait_type": "Bed Rooms",
-            "value": 2
-        },
-        {
-            "trait_type": "Bathrooms",
-            "value": 3
-        },
-        {
-            "trait_type": "Square Feet",
-            "value": 2200
-        },
-        {
-            "trait_type": "Year Built",
-            "value": 2013
-        }
-    ]
+  "name": "Cabbage Farm",
+  "address": "Jos, Plateau State, Nigeria",
+  "description": "A Lucrative Cabage farming Agribusiness",
+  "image": "https://bafybeiblpmzvp6qtghmfg3r2dvcqx7grshituh6rerugil57hvgxsuwb6i.ipfs.w3s.link/Farm%20Cabbage.jpg",
+  "id": "1",
+  "attributes": [
+    {
+      "trait_type": "Purchase Price (ETH)",
+      "value": 20
+    },
+    {
+      "trait_type": "Type of Business",
+      "value": "Food Farming"
+    },
+    {
+      "trait_type": "Size in Hecters",
+      "value": 200
+    },
+    {
+      "trait_type": "Current Year",
+      "value": 6
+    },
+    {
+      "trait_type": "Annual Output Units",
+      "value": 1000000
+    },
+    {
+      "trait_type": "Year Registered",
+      "value": 2017
+    }
+  ]
 }

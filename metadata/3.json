@@ -1,33 +1,33 @@
 {
-    "name": "WA Nature Home",
-    "address": "183 Woodland Drive, Camano Island, WA 98282",
-    "description": "Comfy island home on Camano Island",
-    "image": "https://ipfs.io/ipfs/QmQUozrHLAusXDxrvsESJ3PYB3rUeUuBAvVWw6nop2uu7c/3.png",
-    "id": "3",
-    "attributes": [
-        {
-            "trait_type": "Purchase Price",
-            "value": 10
-        },
-        {
-            "trait_type": "Type of Residence",
-            "value": "Single family residence"
-        },
-        {
-            "trait_type": "Bed Rooms",
-            "value": 3
-        },
-        {
-            "trait_type": "Bathrooms",
-            "value": 3
-        },
-        {
-            "trait_type": "Square Feet",
-            "value": 2202
-        },
-        {
-            "trait_type": "Year Built",
-            "value": 2020
-        }
-    ]
+  "name": "Plantain Plantation Farm",
+  "address": "Ohazara, Mbaise, Imo State, Nigeria",
+  "description": "A Lucrative Plantain Plantation Agribusiness",
+  "image": "https://bafybeif76tq2euord2tilhdq7i3hknbevk4ntjmlhywzxlhjfml7hfft34.ipfs.w3s.link/Plantain-plantation.jpg",
+  "id": "3",
+  "attributes": [
+    {
+      "trait_type": "Purchase Price (ETH)",
+      "value": 22
+    },
+    {
+      "trait_type": "Type of Business",
+      "value": "Food Farming"
+    },
+    {
+      "trait_type": "Size in Hecters",
+      "value": 120
+    },
+    {
+      "trait_type": "Current Year",
+      "value": 3
+    },
+    {
+      "trait_type": "Annual Output Units",
+      "value": 1500000
+    },
+    {
+      "trait_type": "Year Registered",
+      "value": 2022
+    }
+  ]
 }

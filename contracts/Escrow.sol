@@ -41,6 +41,15 @@ contract Escrow {
     mapping (uint => bool) public reviewPassed;
     mapping (uint256 => mapping (address => bool)) public approvalStatus;
 
+    event SaleFinalized(
+        uint256 indexed nftID,
+        address buyer,
+        address seller,
+        address lender,
+        address reviewedBy,
+        bool    sold
+    );
+
     constructor(
         address _nftAddress,
         address payable _seller,
@@ -82,13 +91,6 @@ contract Escrow {
         approvalStatus[_nftID][msg.sender] = true;
     }
 
-    // the recieve function since we will be storing ETH on the smartcontract
-    receive() external payable {}
-
-    function getBalance() public view returns(uint256) {
-        return address(this).balance;
-    }
-
     // Finalize the sale
     // Require the review of the business
     // require sale to be authorized
@@ -97,10 +99,39 @@ contract Escrow {
     function finalizeSale(uint256 _nftID) public {
         require(reviewPassed[_nftID]);
         require(approvalStatus[_nftID][buyer[_nftID]]);
-        require(approvalStatus[_nftID][seller[_nftID]]);
-        require(approvalStatus[_nftID][lender[_nftID]]);
+        require(approvalStatus[_nftID][seller]);
+        require(approvalStatus[_nftID][lender]);
+        isListed[_nftID] = false;
 
         // ensure that funds locked in contract suffices
-        require(address(this).balace >= purchasePrice[_nftID]);
+        require(address(this).balance >= purchasePrice[_nftID]);
+        (bool success, ) = payable(seller).call{value: address(this).balance}("");
+        require(success, "failed");
+        emit SaleFinalized(
+            _nftID,
+            msg.sender,
+            seller,
+            lender,
+            inspector,
+            success
+        );
+        IERC721(nftAddress).transferFrom(address(this), buyer[_nftID], _nftID);
+
+    }
+
+    // cancel if review is not approved
+    function cancelSale(uint256 _nftID) public {
+        if (reviewPassed[_nftID] == false) {
+            payable(buyer[_nftID]).transfer(address(this).balance);
+        } else {
+            payable(seller).transfer(address(this).balance);
+        }
+    }
+
+    // the recieve function since we will be storing ETH on the smartcontract
+    receive() external payable {}
+
+    function getBalance() public view returns(uint256) {
+        return address(this).balance;
     }
 }
