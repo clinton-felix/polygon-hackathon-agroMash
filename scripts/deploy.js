@@ -15,6 +15,10 @@ async function main() {
   console.log(`...deployed AgroMash contract at ${agroMash.address}`);
   console.log(`...Minting 3 AgriBusinesses...\n`);
 
+  const tokens = (n) => {
+    return ethers.utils.parseUnits(n.toString(), "ether");
+  };
+
   // Mint 3 NFTs
   let transaction = await agroMash
     .connect(seller)
@@ -34,9 +38,44 @@ async function main() {
       "https://bafybeid4ag6pxujqmoln5xjruma2w5k3fujpvjtzjrlnssaakjvnbikq2y.ipfs.w3s.link/3.json"
     );
   await transaction.wait();
-}
 
-// Deploying the Escrow Contract
+  // Deploying the Escrow Contract
+  const Escrow = await ethers.getContractFactory("Escrow");
+  escrow = await Escrow.deploy(
+    agroMash.address,
+    seller.address,
+    inspector.address,
+    lender.address
+  );
+  await escrow.deployed();
+  console.log(`...deployed Escrow contract at ${escrow.address}`);
+
+  // Approving each property
+  for (let i = 0; i < 3; i++) {
+    let transaction = await agroMash
+      .connect(seller)
+      .approve(escrow.address, i + 1);
+    transaction.wait();
+  }
+
+  // Listing properties
+  transaction = await escrow
+    .connect(seller)
+    .list(1, buyer.address, tokens(20), tokens(10));
+  transaction.wait();
+
+  transaction = await escrow
+    .connect(seller)
+    .list(2, buyer.address, tokens(17), tokens(7));
+  transaction.wait();
+
+  transaction = await escrow
+    .connect(seller)
+    .list(3, buyer.address, tokens(22), tokens(12));
+  transaction.wait();
+
+  console.log("Finished..");
+}
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
