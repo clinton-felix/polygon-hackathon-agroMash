@@ -39,6 +39,7 @@ contract Escrow {
     mapping (uint256 => uint256) public escrowAmount;
     mapping (uint256 => address) public buyer;
     mapping (uint => bool) public reviewPassed;
+    mapping (uint256 => mapping (address => bool)) public approvalStatus;
 
     constructor(
         address _nftAddress,
@@ -73,8 +74,12 @@ contract Escrow {
     }
 
     // updating the status of the business
-    function updateReviewPassed(uint256 _nftID, bool _passed) public onlyInspector {
+    function updateReviewStatus(uint256 _nftID, bool _passed) public onlyInspector {
         reviewPassed[_nftID] = _passed;
+    }
+
+    function approveSale(uint256 _nftID) public {
+        approvalStatus[_nftID][msg.sender] = true;
     }
 
     // the recieve function since we will be storing ETH on the smartcontract
@@ -82,5 +87,20 @@ contract Escrow {
 
     function getBalance() public view returns(uint256) {
         return address(this).balance;
+    }
+
+    // Finalize the sale
+    // Require the review of the business
+    // require sale to be authorized
+    // require funds to be correct amount
+    // Transfer NFT to buyer and transfer funds to seller
+    function finalizeSale(uint256 _nftID) public {
+        require(reviewPassed[_nftID]);
+        require(approvalStatus[_nftID][buyer[_nftID]]);
+        require(approvalStatus[_nftID][seller[_nftID]]);
+        require(approvalStatus[_nftID][lender[_nftID]]);
+
+        // ensure that funds locked in contract suffices
+        require(address(this).balace >= purchasePrice[_nftID]);
     }
 }
