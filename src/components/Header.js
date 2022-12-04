@@ -1,11 +1,11 @@
-import logo from "../assets/logo.svg";
 import { useMoralis } from "react-moralis";
 import { useEffect } from "react";
 
-const Navigation = ({ account, setAccount }) => {
+export default function ManualHeader() {
+  //**  Header Connect Button Navbar **/
   const {
     enableWeb3,
-    //account,
+    account,
     isWeb3Enabled,
     Moralis,
     deactivateWeb3,
@@ -36,33 +36,8 @@ const Navigation = ({ account, setAccount }) => {
       }
     });
   }, []);
-
-  //   const connectHandler = async () => {
-  //     const accounts = await window.ethereum.request({
-  //       method: "eth_requestAccounts",
-  //     });
-  //     setAccount(accounts[0]);
-  //     console.log(accounts[0]); // reading from the state
-  //   };
   return (
-    <nav>
-      <ul className="nav__links">
-        <li>
-          <a href="#">Buy</a>
-        </li>
-        <li>
-          <a href="#">Rent</a>
-        </li>
-        <li>
-          <a href="#">Sell</a>
-        </li>
-      </ul>
-
-      <div className="nav__brand">
-        <img src={logo} alt="AgroMash" />
-        <h1>AgroMash</h1>
-      </div>
-
+    <div>
       {account ? (
         <div>
           Connected to: {account.slice(0, 6)}....
@@ -82,8 +57,6 @@ const Navigation = ({ account, setAccount }) => {
           Connect
         </button>
       )}
-    </nav>
+    </div>
   );
-};
-
-export default Navigation;
+}
