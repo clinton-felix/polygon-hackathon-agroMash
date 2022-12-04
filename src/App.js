@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 // Components
 import Navigation from "./components/Navigation";
 import Search from "./components/Search";
-import Home from "./components/Home";
+import AgriBusiness from "./components/AgriBusinesses";
 
 // ABIs
 import AgroMash from "./abis/AgroMash.json";
@@ -15,11 +15,14 @@ import config from "./config.json";
 
 function App() {
   const [escrow, setEscrow] = useState(null);
+  const [agriBusinesses, setAgriBusinesses] = useState([]);
+  const [agriBusiness, setAgriBusiness] = useState([]);
   const [account, setAccount] = useState(null);
   const [provider, setProvider] = useState(null);
+  const [toggle, setToggle] = useState(false);
 
   const loadBlockchainData = async () => {
-    provider = new ethers.providers.Web3Provider(window.ethereum);
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
     setProvider(provider);
 
     // set network
@@ -39,6 +42,8 @@ function App() {
       const metadata = await response.json();
       agriBusinesses.push(metadata);
     }
+
+    setAgriBusinesses(agriBusinesses);
 
     const escrow = new ethers.Contract(
       config[network.chainId].escrow.address,
@@ -60,29 +65,50 @@ function App() {
     loadBlockchainData();
   }, []);
 
+  const togglePop = (agriBusiness) => {
+    setAgriBusiness(agriBusiness);
+    toggle ? setToggle(false) : setToggle(true);
+  };
+
   return (
     <div>
       <Navigation account={account} setAccount={setAccount} />
       <Search />
       <div className="cards__section">
-        <h3>Agri-Businesses for You</h3>
+        <h3>Agri-Businesses For You</h3>
         <hr />
         <div className="cards">
-          <div className="card">
-            <div className="card__image">
-              <img src="" alt="Home" />
+          {agriBusinesses.map((agriBusiness, index) => (
+            <div
+              className="card"
+              key={index}
+              onClick={() => togglePop(agriBusiness)}>
+              <div className="card__image">
+                <img src={agriBusiness.image} alt="AgriBusiness" />
+              </div>
+              <div className="card__info">
+                <h4>{agriBusiness.attributes[0].value * 768} MATIC</h4>
+                <p>
+                  <strong>{agriBusiness.attributes[1].value}</strong> type |
+                  <strong>{agriBusiness.attributes[2].value}</strong> acres |
+                  <strong>{agriBusiness.attributes[4].value}</strong> units
+                </p>
+                <h5> {agriBusiness.name}</h5>
+                <p> {agriBusiness.address}</p>
+              </div>
             </div>
-            <div className="card__info">
-              <h4>1 ETH</h4>
-              <p>
-                <strong>1</strong> type |<strong>2</strong> size |
-                <strong>3</strong> output
-              </p>
-              <p> Plantain Plantation, Mbaise</p>
-            </div>
-          </div>
+          ))}
         </div>
       </div>
+      {toggle && (
+        <AgriBusiness
+          agriBusiness={agriBusiness}
+          provider={provider}
+          account={account}
+          escrow={escrow}
+          togglePop={togglePop}
+        />
+      )}
     </div>
   );
 }
